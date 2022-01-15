@@ -7,13 +7,21 @@ use GuzzleHttp\Client;
 class Beer
 {
 
-    public function all($param)
+    /**
+     * @var Client
+     */
+    private $client;
+
+    public function __construct()
     {
-        $client = new Client([
+        $this->client = new Client([
             'base_uri' => 'https://api.punkapi.com/v2/'
         ]);
+    }
 
-        $response = $client->request('GET', 'beers', [
+    public function all($param)
+    {
+        $response = $this->client->request('GET', 'beers', [
             'query' => ['food' => $param]
         ]);
         return $response->getBody()->getContents();
@@ -21,11 +29,8 @@ class Beer
 
     public function find(int $id)
     {
+        $response = $this->client->request('GET', "beers/{$id}");
 
-        $client = new Client([
-            'base_uri' => 'https://api.punkapi.com/v2/'
-        ]);
-        $response = $client->request('GET', "beers/{$id}");
         return $response->getBody()->getContents();
     }
 }
