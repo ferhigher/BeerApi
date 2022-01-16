@@ -19,18 +19,18 @@ class Beer
         ]);
     }
 
-    public function all($param)
+    public function filter($param)
     {
         $response = $this->client->request('GET', 'beers', [
             'query' => ['food' => $param]
         ]);
-        return $response->getBody()->getContents();
+        return json_decode($response->getBody(), true);
     }
 
     public function find(int $id)
     {
         $response = $this->client->request('GET', "beers/{$id}");
 
-        return $response->getBody()->getContents();
+        return json_decode($response->getBody(), true);
     }
 }

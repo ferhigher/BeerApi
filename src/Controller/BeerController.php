@@ -24,13 +24,22 @@ class BeerController extends AbstractController
     /**
      * @Route("/beers", name="beers")
      */
-    public function index(Request $request): JsonResponse
+    public function filter(Request $request): JsonResponse
     {
         $param = $request->query->get('food');
-        $beers = $this->beer->all($param);
+        $beers = $this->beer->filter($param);
+        $response = array();
+        foreach ($beers as $beer) {
+            $beerView = [
+                'id' => $beer['id'],
+                'name' => $beer['name'],
+                'description' => $beer['description'],
+            ];
+            $response[] = $beerView;
+        }
 
         return new JsonResponse([
-            'response' => $beers,
+            'response' => $response,
             'Status' => 'OK',
             Response::HTTP_OK,
         ]);
@@ -43,8 +52,17 @@ class BeerController extends AbstractController
     {
         $beer = $this->beer->find($id);
 
+        $beerView = [
+            'id' => $beer[0]['id'],
+            'name' => $beer[0]['name'],
+            'description' => $beer[0]['description'],
+            'image' => $beer[0]['image_url'],
+            'tagline' => $beer[0]['tagline'],
+            'first_brewed' => $beer[0]['first_brewed'],
+        ];
+
         return new JsonResponse([
-            'response' => $beer,
+            'response' => $beerView,
             'Status' => 'OK',
             Response::HTTP_OK,
         ]);
