@@ -24,8 +24,16 @@ class HttpClient
         $response = $this->client->request('GET', 'beers', [
             'query' => $filters
         ]);
+
         return json_decode($response->getBody(), true);
 
+    }
+
+    public function requestBeer($id)
+    {
+        $response = $this->client->request('GET', "beers/{$id}");
+
+        return json_decode($response->getBody(), true);
     }
 
 }

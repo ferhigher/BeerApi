@@ -18,11 +18,16 @@ class BeerController extends AbstractController
 
     /** @var GetBeersByFoodUseCase */
     private $getBeersByFood;
+    /**
+     * @var GetBeersByIdUseCase
+     */
+    private $getBeersById;
 
-    public function __construct(BeerRepository $beerRepo, GetBeersByFoodUseCase $getBeersByFood)
+    public function __construct(BeerRepository $beerRepo, GetBeersByFoodUseCase $getBeersByFood, GetBeersByIdUseCase $getBeersById)
     {
         $this->beerRepository = $beerRepo;
         $this->getBeersByFood = $getBeersByFood;
+        $this->getBeersById = $getBeersById;
     }
 
     /**
@@ -46,19 +51,10 @@ class BeerController extends AbstractController
      */
     public function show(int $id): JsonResponse
     {
-        $beer = $this->beerRepository->find($id);
-
-        $beerView = [
-            'id' => $beer[0]['id'],
-            'name' => $beer[0]['name'],
-            'description' => $beer[0]['description'],
-            'image' => $beer[0]['image_url'],
-            'tagline' => $beer[0]['tagline'],
-            'first_brewed' => $beer[0]['first_brewed'],
-        ];
+        $response = $this->getBeersById->execute($id);
 
         return new JsonResponse([
-            'response' => $beerView,
+            'response' => $response,
             'Status' => 'OK',
             Response::HTTP_OK,
         ]);

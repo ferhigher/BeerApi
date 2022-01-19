@@ -30,11 +30,9 @@ class BeerRepository
 
     }
 
-    public function find(int $id)
+    public function findById(int $id)
     {
-        $response = $this->client->request('GET', "beers/{$id}");
-
-        return json_decode($response->getBody(), true);
+        return $this->client->requestBeer($id);
     }
 
 }
