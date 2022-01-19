@@ -2,35 +2,120 @@
 
 namespace App\Model;
 
-use GuzzleHttp\Client;
-
 class Beer
 {
+    private $id;
+    private $name;
+    private $description;
+    private $image_url;
+    private $tagline;
+    private $first_brewed;
+
+    public function __construct($id, $name, $description, $image_url, $tagline, $first_brewed)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->description = $description;
+        $this->image_url = $image_url;
+        $this->tagline = $tagline;
+        $this->first_brewed = $first_brewed;
+
+    }
 
     /**
-     * @var Client
+     * @return mixed
      */
-    private $client;
-
-    public function __construct()
+    public function getId()
     {
-        $this->client = new Client([
-            'base_uri' => 'https://api.punkapi.com/v2/'
-        ]);
+        return $this->id;
     }
 
-    public function filter($param)
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
     {
-        $response = $this->client->request('GET', 'beers', [
-            'query' => ['food' => $param]
-        ]);
-        return json_decode($response->getBody(), true);
+        $this->id = $id;
     }
 
-    public function find(int $id)
+    /**
+     * @return mixed
+     */
+    public function getName()
     {
-        $response = $this->client->request('GET', "beers/{$id}");
-
-        return json_decode($response->getBody(), true);
+        return $this->name;
     }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageUrl()
+    {
+        return $this->image_url;
+    }
+
+    /**
+     * @param mixed $image_url
+     */
+    public function setImageUrl($image_url): void
+    {
+        $this->image_url = $image_url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTagline()
+    {
+        return $this->tagline;
+    }
+
+    /**
+     * @param mixed $tagline
+     */
+    public function setTagline($tagline): void
+    {
+        $this->tagline = $tagline;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstBrewed()
+    {
+        return $this->first_brewed;
+    }
+
+    /**
+     * @param mixed $first_brewed
+     */
+    public function setFirstBrewed($first_brewed): void
+    {
+        $this->first_brewed = $first_brewed;
+    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Model\Beer;
+use App\Repositories\BeerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,13 +12,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class BeerController extends AbstractController
 {
     /**
-     * @var Beer
+     * @var BeerRepository
      */
-    private $beer;
+    private $beerRepository;
 
-    public function __construct(Beer $beer)
+    /** @var GetBeersByFoodUseCase */
+    private $getBeersByFood;
+
+    public function __construct(BeerRepository $beerRepo, GetBeersByFoodUseCase $getBeersByFood)
     {
-        $this->beer = $beer;
+        $this->beerRepository = $beerRepo;
+        $this->getBeersByFood = $getBeersByFood;
     }
 
     /**
@@ -26,17 +30,9 @@ class BeerController extends AbstractController
      */
     public function filter(Request $request): JsonResponse
     {
-        $param = $request->query->get('food');
-        $beers = $this->beer->filter($param);
-        $response = array();
-        foreach ($beers as $beer) {
-            $beerView = [
-                'id' => $beer['id'],
-                'name' => $beer['name'],
-                'description' => $beer['description'],
-            ];
-            $response[] = $beerView;
-        }
+
+        $food = $request->query->get('food');
+        $response = $this->getBeersByFood->execute($food);
 
         return new JsonResponse([
             'response' => $response,
@@ -50,7 +46,7 @@ class BeerController extends AbstractController
      */
     public function show(int $id): JsonResponse
     {
-        $beer = $this->beer->find($id);
+        $beer = $this->beerRepository->find($id);
 
         $beerView = [
             'id' => $beer[0]['id'],
